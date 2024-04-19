@@ -53,9 +53,7 @@ internal static class SemanticKernelExtensions
             {
                 var provider = sp.GetRequiredService<SemanticKernelProvider>();
                 var kernel = provider.GetCompletionKernel();
-
                 sp.GetRequiredService<RegisterFunctionsWithKernel>()(sp, kernel);
-
                 // If KernelSetupHook is not null, invoke custom kernel setup.
                 sp.GetService<KernelSetupHook>()?.Invoke(sp, kernel);
                 return kernel;

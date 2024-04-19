@@ -44,6 +44,8 @@ public class CosmosDbContext<T> : IStorageContext<T>, IDisposable where T : ISto
             },
         };
         this._client = new CosmosClient(connectionString, options);
+        this._client.CreateDatabaseIfNotExistsAsync(database).Wait();
+        this._client.GetDatabase(database).CreateContainerIfNotExistsAsync(container, "/partition").Wait();
         this._container = this._client.GetContainer(database, container);
     }
 

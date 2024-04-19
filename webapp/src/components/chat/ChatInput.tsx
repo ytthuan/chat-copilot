@@ -140,7 +140,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({ isDraggingOver, onDragLeav
         if (value.trim() === '') {
             return; // only submit if value is not empty
         }
-
+        
         setValue('');
         dispatch(editConversationInput({ id: selectedId, newInput: '' }));
         dispatch(updateBotResponseStatus({ chatId: selectedId, status: 'Calling the kernel' }));

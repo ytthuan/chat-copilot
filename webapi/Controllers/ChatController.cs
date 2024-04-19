@@ -226,6 +226,7 @@ public class ChatController : ControllerBase, IDisposable
     {
         this._logger.LogInformation("Enabling GitHub plugin.");
         BearerAuthenticationProvider authenticationProvider = new(() => Task.FromResult(GithubAuthHeader));
+#pragma warning disable SKEXP0040 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
         await kernel.ImportPluginFromOpenApiAsync(
             pluginName: "GitHubPlugin",
             filePath: GetPluginFullPath("GitHubPlugin/openapi.json"),
@@ -233,6 +234,7 @@ public class ChatController : ControllerBase, IDisposable
             {
                 AuthCallback = authenticationProvider.AuthenticateRequestAsync,
             });
+#pragma warning restore SKEXP0040 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
     }
 
     private async Task RegisterJiraPlugin(Kernel kernel, string JiraAuthHeader, KernelArguments variables)
@@ -241,6 +243,7 @@ public class ChatController : ControllerBase, IDisposable
         var authenticationProvider = new BasicAuthenticationProvider(() => { return Task.FromResult(JiraAuthHeader); });
         var hasServerUrlOverride = variables.TryGetValue("jira-server-url", out object? serverUrlOverride);
 
+#pragma warning disable SKEXP0040 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
         await kernel.ImportPluginFromOpenApiAsync(
             pluginName: "JiraPlugin",
             filePath: GetPluginFullPath("OpenApi/JiraPlugin/openapi.json"),
@@ -249,6 +252,7 @@ public class ChatController : ControllerBase, IDisposable
                 AuthCallback = authenticationProvider.AuthenticateRequestAsync,
                 ServerUrlOverride = hasServerUrlOverride ? new Uri(serverUrlOverride!.ToString()!) : null,
             }); ; ;
+#pragma warning restore SKEXP0040 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
     }
 
     private Task RegisterMicrosoftGraphPlugins(Kernel kernel, string GraphAuthHeader)
@@ -278,13 +282,16 @@ public class ChatController : ControllerBase, IDisposable
 
                     // TODO: [Issue #44] Support other forms of auth. Currently, we only support user PAT or no auth.
                     var requiresAuth = !plugin.AuthType.Equals("none", StringComparison.OrdinalIgnoreCase);
+#pragma warning disable SKEXP0040 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
                     Task authCallback(HttpRequestMessage request, string _, OpenAIAuthenticationConfig __, CancellationToken ___ = default)
                     {
                         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", PluginAuthValue);
 
                         return Task.CompletedTask;
                     }
+#pragma warning restore SKEXP0040 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
 
+#pragma warning disable SKEXP0040 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
                     yield return kernel.ImportPluginFromOpenAIAsync(
                         $"{plugin.NameForModel}Plugin",
                         PluginUtils.GetPluginManifestUri(plugin.ManifestDomain),
@@ -294,6 +301,7 @@ public class ChatController : ControllerBase, IDisposable
                             IgnoreNonCompliantErrors = true,
                             AuthCallback = requiresAuth ? authCallback : null
                         });
+#pragma warning restore SKEXP0040 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
                 }
             }
         }
@@ -331,14 +339,17 @@ public class ChatController : ControllerBase, IDisposable
             {
                 this._logger.LogDebug("Enabling hosted plugin {0}.", plugin.Name);
 
+#pragma warning disable SKEXP0040 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
                 Task authCallback(HttpRequestMessage request, string _, OpenAIAuthenticationConfig __, CancellationToken ___ = default)
                 {
                     request.Headers.Add("X-Functions-Key", plugin.Key);
 
                     return Task.CompletedTask;
                 }
+#pragma warning restore SKEXP0040 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
 
                 // Register the ChatGPT plugin with the kernel.
+#pragma warning disable SKEXP0040 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
                 await kernel.ImportPluginFromOpenAIAsync(
                     PluginUtils.SanitizePluginName(plugin.Name),
                     PluginUtils.GetPluginManifestUri(plugin.ManifestDomain),
@@ -348,6 +359,7 @@ public class ChatController : ControllerBase, IDisposable
                         IgnoreNonCompliantErrors = true,
                         AuthCallback = authCallback
                     });
+#pragma warning restore SKEXP0040 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
             }
             else
             {
@@ -477,7 +489,9 @@ public class BearerAuthenticationProvider
     /// Applies the token to the provided HTTP request message.
     /// </summary>
     /// <param name="request">The HTTP request message.</param>
+#pragma warning disable SKEXP0040 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
     public async Task OpenAIAuthenticateRequestAsync(HttpRequestMessage request, string pluginName, OpenAIAuthenticationConfig openAIAuthConfig, CancellationToken cancellationToken = default)
+#pragma warning restore SKEXP0040 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
     {
         await this.AuthenticateRequestAsync(request, cancellationToken);
     }

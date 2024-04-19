@@ -2,12 +2,18 @@
 
 using System;
 using System.Net.Http;
+using Azure.AI.OpenAI;
+// using Microsoft.Extensions.Azure;
+// using Azure.AI.OpenAI;
+
+// using Azure;
+// using Azure.AI.OpenAI;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.KernelMemory;
 using Microsoft.SemanticKernel;
-
+// using CopilotChat.WebApi.Extensions;
 namespace CopilotChat.WebApi.Services;
 
 /// <summary>
@@ -53,9 +59,10 @@ public sealed class SemanticKernelProvider
 
             case string x when x.Equals("OpenAI", StringComparison.OrdinalIgnoreCase):
                 var openAIOptions = memoryOptions.GetServiceConfig<OpenAIConfig>(configuration, "OpenAI");
+                var client = new OpenAIClient(openAIOptions.APIKey);
                 builder.AddOpenAIChatCompletion(
-                    openAIOptions.TextModel,
-                    openAIOptions.APIKey,
+                    apiKey: openAIOptions.APIKey,
+                    modelId: openAIOptions.TextModel,
                     httpClient: httpClientFactory.CreateClient());
 #pragma warning restore CA2000
                 break;
